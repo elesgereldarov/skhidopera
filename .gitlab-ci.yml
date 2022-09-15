@@ -1,0 +1,38 @@
+# image: php:7.3.18-fpm
+
+# stages:
+#   - deploy
+
+# before_script:
+#   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -yqq )'
+#   - eval $(ssh-agent -s)
+#   - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+#   - mkdir -p ~/.ssh
+#   - chmod 700 ~/.ssh
+#   - ssh-keyscan $DEV_HOST >> ~/.ssh/known_hosts
+#   - ssh-keyscan -p2222 $PROD_HOST >> ~/.ssh/known_hosts
+#   - chmod 644 ~/.ssh/known_hosts
+
+# deploy to dev:
+#   stage: deploy
+#   script:
+#   - ssh $REMOTE_USER@$DEV_HOST "cd $DEV_DIR && git reset --hard && git pull origin develop" 
+#   - ssh $REMOTE_USER@$DEV_HOST "cd $DEV_DIR && php artisan migrate && gulp build && php artisan view:cache && php artisan config:cache" 
+#   - ssh $REMOTE_USER@$DEV_HOST "cd $DEV_DIR && chown admin:admin $DEV_DIR -R"
+#   # when: manual
+#   tags: 
+#     - docker
+#   only:
+#     - develop
+
+# deploy to prod:
+#   stage: deploy
+#   script:
+#   - ssh -p2222 $REMOTE_USER@$PROD_HOST "cd $PROD_DIR && git reset --hard && git pull origin master" 
+#   - ssh -p2222 $REMOTE_USER@$PROD_HOST "cd $PROD_DIR && php artisan migrate && gulp build && php artisan view:cache && php artisan config:cache" 
+#   - ssh -p2222 $REMOTE_USER@$PROD_HOST "cd $PROD_DIR && chown www-data:www-data $PROD_DIR -R"
+#   when: manual
+#   tags: 
+#     - docker
+#   only:
+#     - master
